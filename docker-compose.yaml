@@ -1,0 +1,30 @@
+services:
+  db:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  be:
+    build:
+      context: ./backend/
+      dockerfile: Dockerfile
+    ports:
+      - "8888:8888"
+    environment:
+      - MONGO_CONNECTION_STRING=mongodb://db:27017/myMernApp
+    depends_on:
+      - db
+
+  fe:
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    depends_on:
+      - be
+
+volumes:
+  mongo-data:
