@@ -1,20 +1,19 @@
-# Frontend Dockerfile
-FROM node:22-slim
+FROM docker.io/library/node:23-alpine AS build
 
-# Set working directory
 WORKDIR /app
 
-# Copy frontend package files
-COPY ./package*.json ./
+COPY . .
 
-# Install dependencies
 RUN npm install
 
-# Copy frontend source code
-COPY ./ .
+FROM docker.io/library/node:23-alpine AS production
 
-# Expose the frontend Vite dev server port
 EXPOSE 5173
 
-# Default command
+WORKDIR /app
+
+COPY package.json ./
+COPY package-lock.json ./
+COPY --from=build /app ./
+
 CMD ["npm", "run", "dev", "--", "--host"]
