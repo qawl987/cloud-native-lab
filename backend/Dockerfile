@@ -14,6 +14,7 @@ EXPOSE 8888
 WORKDIR /app
 
 COPY package.json ./
+COPY ./.env.sample .env
 COPY package-lock.json ./
 COPY --from=build /app ./
 

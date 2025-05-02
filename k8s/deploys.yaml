@@ -17,6 +17,11 @@ spec:
           image: mongo
           ports:
             - containerPort: 27017
+          livenessProbe:
+            tcpSocket:
+              port: 27017
+            initialDelaySeconds: 15
+            periodSeconds: 10
           volumeMounts:
             - name: mongo-storage
               mountPath: /data/db
@@ -47,6 +52,12 @@ spec:
           env:
             - name: MONGO_CONNECTION_STRING
               value: mongodb://db:27017/myMernApp
+          livenessProbe:
+            httpGet:
+              path: /api/v1/todos
+              port: 8888
+            initialDelaySeconds: 20
+            periodSeconds: 5
 
 ---
 apiVersion: apps/v1
@@ -67,4 +78,10 @@ spec:
         - name: frontend
           image: ghcr.io/qawl987/hw3fe
           ports:
-            - containerPort: 80
+            - containerPort: 5173
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 5173
+            initialDelaySeconds: 20
+            periodSeconds: 5
