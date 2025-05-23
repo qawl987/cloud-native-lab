@@ -1,7 +1,9 @@
 dist
 frontend/dist
 backend/dist
+.github/
 
+docker-compose.yaml
 # Coverage reports
 coverage
 frontend/coverage

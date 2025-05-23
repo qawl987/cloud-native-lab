@@ -6,15 +6,12 @@
     "install:frontend": "cd frontend && npm ci",
     "install:backend": "cd backend && npm ci",
     "install:all": "npm run install:frontend && npm run install:backend",
-
-    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,yaml,html,css}\" --ignore-path ./.prettierignore",
-
+    "format": "npx prettier --write \"**/*.{js,jsx,ts,tsx}\" --ignore-path ./.prettierignore",
     "test:frontend": "cd frontend && npm run test:e2e",
     "test:backend": "cd backend && npm test",
-
     "test": "npm run test:backend && npm run test:frontend"
   },
   "devDependencies": {
-    "prettier": "^3.2.5"
+    "prettier": "^3.5.3"
   }
 }
