@@ -5,7 +5,7 @@ import { serverOf, serverStart } from './server'
 dotenv.config()
 
 const server = serverOf()
-
+  
 const appConfig: AppConfig = {
   host: process.env.HOST || 'localhost',
   port: process.env.PORT ? parseInt(process.env.PORT) : 3000,
