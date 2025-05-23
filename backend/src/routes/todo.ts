@@ -21,6 +21,16 @@ export const TodoRouter = (server: FastifyInstance, opts: RouteShorthandOptions,
     }
   })
 
+  server.get('/v2/todos', async (request, reply) => {
+    try {
+      const todos = await getTodos()
+      return reply.status(200).send({ todos })
+    } catch (error) {
+      server.log.error(`GET /v1/todos Error: ${error}`)
+      return reply.status(500).send(`[Server Error]: ${error}`)
+    }
+  })
+
   server.post<{ Body: TodoBody }>('/v1/todos', async (request, reply) => {
     try {
       const todoBody = request.body
