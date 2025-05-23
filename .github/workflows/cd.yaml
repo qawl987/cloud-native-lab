@@ -11,7 +11,7 @@ on:
 env:
   # 將 GitHub Repository 的擁有者名稱轉換為小寫，用於 ghcr.io 的路徑
   # ghcr.io 要求 image 名稱使用小寫
-  REGISTRY_USER: ${{ toLower(github.repository_owner) }}
+  REGISTRY_USER: ${{ github.repository_owner }}
   BACKEND_IMAGE_NAME: backend # 後端 Image 名稱
   FRONTEND_IMAGE_NAME: frontend # 前端 Image 名稱
 
