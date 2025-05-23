@@ -35,6 +35,8 @@ jobs:
       run: |
         sudo apt-get update && sudo apt-get install -y jq
 
+    - name: Install Playwright browsers
+      run: npx playwright install --with-deps
     # --- 自動格式化程式碼 (Auto Formatting) ---
     - name: Auto format code (使用 Prettier 或您設定的 format script)
       id: format_code
