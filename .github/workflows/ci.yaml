@@ -82,7 +82,7 @@ jobs:
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: html-coverage-report-${{ github.run_id }}-${{ github.ref_name }} # Add branch to artifact name for clarity
+        name: html-coverage-report-${{ github.run_id }} # Add branch to artifact name for clarity
         path: backend/coverage/ # Vitest 預設的 HTML 報告目錄
         retention-days: 7 # Artifact 保留天數
 
@@ -90,12 +90,12 @@ jobs:
       # 僅在測試成功時執行
       if: steps.run_tests.outcome == 'success'
       run: |
-        if [ ! -f coverage/coverage-summary.json ]; then
+        if [ ! -f backend/coverage/coverage-summary.json ]; then
           echo "Error: coverage/coverage-summary.json not found!"
           exit 1
         fi
         # 複製摘要檔案，用於比較和作為 artifact 上傳
-        cp coverage/coverage-summary.json current-coverage-summary.json
+        cp backend/coverage/coverage-summary.json current-coverage-summary.json
         echo "Coverage summary prepared: current-coverage-summary.json"
 
     - name: Extract current coverage percentage (提取當前覆蓋率百分比)
