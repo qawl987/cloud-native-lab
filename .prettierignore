@@ -1,0 +1,23 @@
+dist
+frontend/dist
+backend/dist
+
+# Coverage reports
+coverage
+frontend/coverage
+backend/coverage
+
+# Node modules
+node_modules
+frontend/node_modules
+backend/node_modules
+
+# Lockfiles (Prettier usually ignores these, but explicit is good)
+package-lock.json
+frontend/package-lock.json
+backend/package-lock.json
+yarn.lock
+
+# Environment files
+.env
+*.env
