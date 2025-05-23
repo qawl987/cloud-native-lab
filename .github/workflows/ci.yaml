@@ -1,0 +1,29 @@
+name: Run Vitest Tests
+
+on:
+  push:
+    branches: [ '**' ] # Or your default branch e.g., master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest # You can specify other OS if needed
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x] # Specify Node.js versions to test against
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4 # Use the latest version
+
+    - name: Set up Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4 # Use the latest version
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm' # Or 'yarn' if you use Yarn
+
+    - name: Install dependencies
+      run: npm install # Or yarn install
+
+    - name: Run tests
+      run: npm test # Or yarn test, or npx vitest run
