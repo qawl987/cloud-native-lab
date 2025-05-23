@@ -1,0 +1,85 @@
+# .github/workflows/cd.yaml
+
+name: CD - Build and Push Docker Images to GHCR
+
+# 觸發條件：當有推送 (push) 事件到 main 分支時執行
+on:
+  push:
+    branches:
+      - main # 您可以根據需要更改為您的主要分支名稱，例如 master
+
+env:
+  # 將 GitHub Repository 的擁有者名稱轉換為小寫，用於 ghcr.io 的路徑
+  # ghcr.io 要求 image 名稱使用小寫
+  REGISTRY_USER: ${{ toLower(github.repository_owner) }}
+  BACKEND_IMAGE_NAME: backend # 後端 Image 名稱
+  FRONTEND_IMAGE_NAME: frontend # 前端 Image 名稱
+
+jobs:
+  build_and_push_backend:
+    name: Build and Push Backend Image
+    runs-on: ubuntu-latest # 使用最新的 Ubuntu 執行環境
+    permissions:
+      contents: read # 需要讀取 Repository 內容的權限 (例如 checkout)
+      packages: write # 需要寫入 GitHub Packages (ghcr.io) 的權限
+
+    steps:
+      - name: Checkout repository
+        # 拉取最新的程式碼
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        # 登入 ghcr.io
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }} # 使用觸發此 workflow 的使用者名稱
+          password: ${{ secrets.GITHUB_TOKEN }} # 使用 GitHub 自動產生的 GITHUB_TOKEN
+
+      - name: Set up Docker Buildx
+        # 設定 Docker Buildx，以便使用最新的 Docker 建置功能
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push backend Docker image
+        # 建置並推送後端 Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend # Dockerfile 所在的目錄 (相對於 Repository 根目錄)
+          file: ./backend/Dockerfile # Dockerfile 的路徑
+          push: true # 推送 Image 到 Registry
+          tags: | # Image 的標籤
+            ghcr.io/${{ env.REGISTRY_USER }}/${{ env.BACKEND_IMAGE_NAME }}:latest
+          # cache-from: type=gha # 可選：啟用 GitHub Actions cache 加速建置
+          # cache-to: type=gha,mode=max # 可選：啟用 GitHub Actions cache 加速建置
+
+  build_and_push_frontend:
+    name: Build and Push Frontend Image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push frontend Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ env.REGISTRY_USER }}/${{ env.FRONTEND_IMAGE_NAME }}:latest
+          # cache-from: type=gha
+          # cache-to: type=gha,mode=max
